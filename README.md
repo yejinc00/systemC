@@ -3,7 +3,7 @@
 - 2 master, 2 slave
 - Address bandwidth = 8bits
 - Data bandwidth = 32bits
-<img src="C:\Users\yejin\Desktop\산학연계프로젝트\SimpleBusFSM.PNG" width="450px" height="300px" title="px(픽셀) 크기 설정" alt="RubberDuck"></img><br/>
+
 
 
 ### Master
