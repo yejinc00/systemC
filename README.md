@@ -17,7 +17,7 @@
 
 
 ### Tips
-- 다음 코드의 정체는?
+- ignore useless warning message
 ```bash
 sc_report_handler::set_actions("/IEEE_Std_1666/deprecated", SC_DO_NOTHING);
 ```
