@@ -1,6 +1,8 @@
 ### SimpleBus
 ------------
 - 2 master, 2 slave
+- Slave 0's address : 0x00~0x1F
+- Slave 1's address : 0x20~0x3F
 - Address bandwidth = 8bits
 - Data bandwidth = 32bits
 - FSM
