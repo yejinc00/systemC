@@ -5,7 +5,7 @@
 - Data bandwidth = 32bits
 <img width="500" alt="SimpleBusFSM" src="https://user-images.githubusercontent.com/57093610/94173213-8ec1b900-fece-11ea-9e49-08098132556e.PNG">
 
-
+--------------
 ### Master
 
 
