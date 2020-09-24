@@ -3,7 +3,7 @@
 - 2 master, 2 slave
 - Address bandwidth = 8bits
 - Data bandwidth = 32bits
-
+![Uploading SimpleBusFSM.PNG…]()
 
 
 ### Master
