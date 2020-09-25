@@ -14,12 +14,7 @@
 
 
 ### Slave
-------------
-ALU
-
-
-------------
-
+##ALU
 
 ### Tips
 - ignore useless warning message
