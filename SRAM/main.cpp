@@ -1,5 +1,6 @@
 #include <systemc.h>
-#include "memory.h"
+#include "sram.h"
+#include "bus.h"
 #include "SYSTEM.h"
 #include "tb.h"
 

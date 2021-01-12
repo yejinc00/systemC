@@ -1,10 +1,10 @@
 #pragma once
 #include <systemc.h>
 
-SC_MODULE(memory) {
+SC_MODULE(bus) {
 
 
-	SC_CTOR(memory) {
+	SC_CTOR(bus) {
 
 	}
 };
