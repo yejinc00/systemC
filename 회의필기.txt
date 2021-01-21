@@ -1,0 +1,21 @@
+burst일때 딜레이
+-> 한 번 접근할때
+
+memory bank
+-> 전력소모 방지를 위해 active 상태인 bank를 여러개 두지 마라
+-> inactive상태로 구현 어떻게?
+
+row address, bank address change에 걸리는 딜레이?
+-> 상위 2bit이 바뀌었을 때 동작
+
+memory array stack -> 동적으로 바꾸기
+sc_int<1> -> bool이나 uint로 바꾸기
+random generator로 input 만들기
+
+
+compress == encode
+pixel은 non-zero value를 뜻
+nzvl 파일도 sram에서 입력받기
+
+valid와 ready 신호가 불필요한게 많다.
+Cen이 valid역할을 할거같다.
