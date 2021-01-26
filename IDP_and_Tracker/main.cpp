@@ -1,9 +1,7 @@
 #include <systemc.h>
-#include "pixel_memory.h"
-#include "IDP.h"
 #include "input_tracker.h"
-#include "bus.h"
 #include "SYSTEM.h"
+#include "IDP.h"
 #include "tb.h"
 
 SYSTEM* top = NULL;

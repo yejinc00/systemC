@@ -1,88 +1,81 @@
 #pragma once
-#include <systemc.h>
-#include "pixel_memory.h"
+#include<systemc.h>
 #include "input_tracker.h"
 #include "IDP.h"
 #include "tb.h"
 
 SC_MODULE(SYSTEM) {
 	///// pointer of modules /////
-	tb* tb0;
-	pixel_memory* pixel_memory0;
 	idp* idp0;
+	tracker* tracker0;
+	tb* tb0;
 
-	///// signal for connect module tb and pixel memory /////
+	///// signal for connect tracker and IDP module /////
 	sc_signal<sc_int<8>> sig_addr;
-	sc_signal<sc_int<1>> sig_addr_valid;
-	sc_signal<sc_int<1>> sig_addr_ready;
+	sc_signal<bool> sig_addr_valid;
+	sc_signal<bool> sig_addr_ready;
+	
+	///// signal for connect tb and IDP module /////
+	sc_signal<sc_int<8>> sig_req_addr;
+	sc_signal<bool> sig_req_addr_valid;
+	sc_signal<bool> sig_req_addr_ready;
 
 	sc_signal<sc_int<16>> sig_Din;
-	sc_signal<sc_int<1>> sig_Din_valid;
-	sc_signal<sc_int<1>> sig_Din_ready;
+	sc_signal<bool> sig_Din_valid;
+	sc_signal<bool> sig_Din_ready;
 
-	sc_signal<sc_int<1>> sig_Cen;
-	sc_signal<sc_int<1>> sig_Cen_valid;
-	sc_signal<sc_int<1>> sig_Cen_ready;
+	sc_signal<sc_int<16>> sig_pixel;
+	sc_signal<bool> sig_pixel_valid;
+	sc_signal<bool> sig_pixel_ready;
 
-	sc_signal<sc_int<1>> sig_Wen;
-	sc_signal<sc_int<1>> sig_Wen_valid;
-	sc_signal<sc_int<1>> sig_Wen_ready;
+	sc_signal<sc_uint<8>> sig_pixel_request;
 
-	sc_signal<sc_int<16>> sig_Dout;
-	sc_signal<sc_int<1>> sig_Dout_valid;
-	sc_signal<sc_int<1>> sig_Dout_ready;
 
 	///// constructor /////
 	sc_clock clk_sig;
 	SC_CTOR(SYSTEM) : clk_sig("clk_sig", 1, SC_NS) {
 
 		///// connecting module /////
+		idp0 = new idp("idp0");
+		idp0->clk(clk_sig);
+		idp0->addr(sig_addr);
+		idp0->addr_valid(sig_addr_valid);
+		idp0->addr_ready(sig_addr_ready);
+		idp0->req_addr(sig_req_addr);
+		idp0->req_addr_valid(sig_req_addr_valid);
+		idp0->req_addr_ready(sig_req_addr_ready);
+		idp0->Din(sig_Din);
+		idp0->Din_valid(sig_Din_valid);
+		idp0->Din_ready(sig_Din_ready);
+		idp0->pixel(sig_pixel);
+		idp0->pixel_valid(sig_pixel_valid);
+		idp0->pixel_ready(sig_pixel_ready);
+		idp0->pixel_request(sig_pixel_request);
+
+		tracker0 = new tracker("tracker0");
+		tracker0->clk(clk_sig);
+		tracker0->addr(sig_addr);
+		tracker0->addr_valid(sig_addr_valid);
+		tracker0->addr_ready(sig_addr_ready);
+
 		tb0 = new tb("tb0");
 		tb0->clk(clk_sig);
-		tb0->Dout(sig_Dout);
-		tb0->Dout_valid(sig_Dout_valid);
-		tb0->addr_ready(sig_addr_ready);
-		tb0->Din_ready(sig_Din_ready);
-		tb0->Cen_ready(sig_Cen_ready);
-		tb0->Wen_ready(sig_Wen_ready);
-
-		tb0->addr(sig_addr);
-		tb0->addr_valid(sig_addr_valid);
+		tb0->req_addr(sig_req_addr);
+		tb0->req_addr_valid(sig_req_addr_valid);
+		tb0->req_addr_ready(sig_req_addr_ready);
 		tb0->Din(sig_Din);
 		tb0->Din_valid(sig_Din_valid);
-		tb0->Cen(sig_Cen);
-		tb0->Cen_valid(sig_Cen_valid);
-		tb0->Wen(sig_Wen);
-		tb0->Wen_valid(sig_Wen_valid);
-		tb0->Dout_ready(sig_Dout_ready);
-
-		pixel_memory0 = new pixel_memory("pixel memory0");
-		pixel_memory0->clk(clk_sig);
-		pixel_memory0->addr(sig_addr);
-		pixel_memory0->addr_valid(sig_addr_valid);
-		pixel_memory0->Din(sig_Din);
-		pixel_memory0->Din_valid(sig_Din_valid);
-		pixel_memory0->Cen(sig_Cen);
-		pixel_memory0->Cen_valid(sig_Cen_valid);
-		pixel_memory0->Wen(sig_Wen);
-		pixel_memory0->Wen_valid(sig_Wen_valid);
-		pixel_memory0->Dout_ready(sig_Dout_ready);
-
-		pixel_memory0->Dout(sig_Dout);
-		pixel_memory0->Dout_valid(sig_Dout_valid);
-		pixel_memory0->addr_ready(sig_addr_ready);
-		pixel_memory0->Din_ready(sig_Din_ready);
-		pixel_memory0->Wen_ready(sig_Wen_ready);
-		pixel_memory0->Cen_ready(sig_Cen_ready);
-
-		idp0 = new idp("idp0");
-
+		tb0->Din_ready(sig_Din_ready);
+		tb0->pixel(sig_pixel);
+		tb0->pixel_valid(sig_pixel_valid);
+		tb0->pixel_ready(sig_pixel_ready);
+		tb0->pixel_request(sig_pixel_request);
 	}
 
 	///// destructor /////
 	~SYSTEM() {
-		delete tb0;
-		delete pixel_memory0;
 		delete idp0;
+		delete tracker0;
+		delete tb0;
 	}
 };
