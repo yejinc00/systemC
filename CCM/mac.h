@@ -1,22 +1,32 @@
 #pragma once
 #include <systemc.h>
 #define ADDDELAY 0
-#define MULDELAY 0
+#define MULDELAY 2
 
 SC_MODULE(mac) {
-	///// mac input port /////
 	sc_in<bool> clk;
-	sc_in<sc_int<16>> input_pixel;
-	sc_in<bool> input_pixel_valid;
-	sc_in<sc_int<16>> input_kernel;
-	sc_in<bool> input_kernel_valid;
+
+	///// CCM controller to MAC input port /////
+	sc_in<sc_int<16>> CCM_pixel;
+	sc_in<bool> CCM_data_valid;
+
+	///// MAC to CCM controller output port /////
+	sc_out<bool> CCM_data_ready;
+
+
+	///// kernel memory to MAC input port /////
+	sc_in<sc_int<16>> SRAM_kernel;
+	sc_in<bool> SRAM_kernel_valid;
+
+	///// MAC to kernel memory output port /////
+	sc_out<bool> SRAM_kernel_ready;
+
+	///// tb to MAC input port /////
 	sc_in<bool> mac_result_ready;
 
-	///// mac output port /////
+	///// MAC to tb output port /////
 	sc_out<sc_int<32>> mac_result;
 	sc_out<bool> mac_result_valid;
-	sc_out<bool> input_pixel_ready;
-	sc_out<bool> input_kernel_ready;
 
 	///// mac internal function /////
 	void mac_main();								// mac controller function
@@ -30,7 +40,7 @@ SC_MODULE(mac) {
 };
 
 
-sc_int<32> mac::multiplier(sc_int<16>pixel, sc_int<16>kernel) {
+sc_int<32> mac::multiplier(sc_int<16>pixel , sc_int<16>kernel) {
 	sc_int <32> mul_result;
 
 	mul_result = pixel * kernel;
@@ -38,8 +48,6 @@ sc_int<32> mac::multiplier(sc_int<16>pixel, sc_int<16>kernel) {
 	for (int i = 0; i < MULDELAY; i++) {
 		wait();
 	}
-
-	cout << "func result: " << mul_result << endl;
 	return mul_result;
 }
 
@@ -78,13 +86,33 @@ void mac::mac_main() {
 
 	buffer(0);							// initialize only once
 	wait();
-	pixel = input_pixel.read();
-	kernel = input_kernel.read();
+	do {
+		wait();
+	} while (!CCM_data_valid.read())
+		;
+	pixel = CCM_pixel.read();
+	CCM_data_ready.write(1);
+
+	do {
+		wait();
+	} while (!SRAM_kernel_valid.read())
+		;
+	kernel = SRAM_kernel.read();
+	SRAM_kernel_ready.write(1);
 
 	input_result = multiplier(pixel, kernel);
 	buff_result = adder(input_result);
 
+	cout << "[MAC]" << endl;
+	cout << "MAC result: " << input_result << endl;
+	cout << "biffer value: " << buff_result << endl << endl;
 
-	cout << "result : " << input_result << endl;
-	cout << "result2: " << buff_result << endl;
+	mac_result.write(input_result);
+	mac_result_valid.write(1);
+	do {
+		wait();
+	} while (!mac_result_ready.read())
+		;
+	mac_result_valid.write(0);
+
 }
